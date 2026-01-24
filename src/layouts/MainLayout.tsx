@@ -46,7 +46,7 @@ const MainLayout = () => {
         <div className="p-4 border-t border-gray-100 dark:border-gray-700">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center p-3 text-red-500 hover:bg-red-50 rounded-lg transition-colors px-4"
+            className="w-full flex items-center p-3 text-red-500 hover:bg-red-50 rounded-lg transition-colors px-4 font-semibold"
           >
             Logout
           </button>
@@ -68,7 +68,7 @@ const MainLayout = () => {
         </header>
 
         {/* Content Area */}
-        <section className="flex-1 overflow-y-auto p-8">
+        <section className="flex-1 overflow-y-auto">
           <Outlet />
         </section>
       </main>

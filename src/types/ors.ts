@@ -15,6 +15,7 @@ export interface TORSPlan {
   overallTrafficScore: string;
   actionRequired: string;
   documents: TDocument[];
+  createdAt: string;
 }
 
 export interface TORSPlanResponse {

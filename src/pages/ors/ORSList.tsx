@@ -45,7 +45,7 @@ const ORSList = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="p-6 max-w-7xl mx-auto w-full space-y-6">
       <div className="flex justify-between items-center">
         <div className="flex flex-col">
           <h1 className="text-xl font-bold dark:text-white">
