@@ -1,27 +1,15 @@
 import { useAppSelector } from '../../redux/hook';
+import { useAllOrsPlanQuery } from '../../redux/api/endApi';
+import { Loader2, AlertCircle, Eye, Pencil, Trash2 } from 'lucide-react';
+import type { TORSPlan } from '../../types/ors';
 
 const ORSList = () => {
   const { user } = useAppSelector((state) => state.user);
+  const { data, isLoading, isError } = useAllOrsPlanQuery(undefined);
+
+  const plans = data?.data || [];
 
   const canModify = user?.role === 'admin' || user?.role === 'inspector';
-
-  const dummyData = [
-    {
-      id: 1,
-      vehicle: 'Truck-12',
-      score: '78%',
-      status: 'Action Required',
-      action: 'Replace brake pads',
-    },
-    { id: 2, vehicle: 'Van-04', score: '92%', status: 'Good', action: 'None' },
-    {
-      id: 3,
-      vehicle: 'Bus-21',
-      score: '65%',
-      status: 'Action Required',
-      action: 'Tire replacement',
-    },
-  ];
 
   return (
     <div className="space-y-4">
@@ -53,49 +41,92 @@ const ORSList = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
-            {dummyData.map((item) => (
-              <tr
-                key={item.id}
-                className="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors"
-              >
-                <td className="px-6 py-4 font-medium dark:text-gray-200">
-                  {item.vehicle}
-                </td>
-                <td className="px-6 py-4">
-                  <span
-                    className={`font-bold ${parseInt(item.score) > 80 ? 'text-green-500' : 'text-orange-500'}`}
-                  >
-                    {item.score}
-                  </span>
-                </td>
-                <td className="px-6 py-4">
-                  <span
-                    className={`px-2 py-1 text-xs font-bold rounded-full ${item.status === 'Good' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}
-                  >
-                    {item.status}
-                  </span>
-                </td>
-                <td className="px-6 py-4 text-right">
-                  <div className="flex justify-end gap-2">
-                    <button className="text-primary hover:underline text-sm font-medium">
-                      View
-                    </button>
-                    {canModify && (
-                      <>
-                        <button className="text-blue-500 hover:underline text-sm font-medium">
-                          Edit
-                        </button>
-                        {user?.role === 'admin' && (
-                          <button className="text-red-500 hover:underline text-sm font-medium">
-                            Delete
-                          </button>
-                        )}
-                      </>
-                    )}
+            {isLoading ? (
+              <tr>
+                <td colSpan={4} className="px-6 py-10 text-center">
+                  <div className="flex flex-col items-center gap-2 text-gray-500">
+                    <Loader2 className="animate-spin" size={32} />
+                    <p className="text-sm font-medium">Loading ORS plans...</p>
                   </div>
                 </td>
               </tr>
-            ))}
+            ) : isError ? (
+              <tr>
+                <td colSpan={4} className="px-6 py-10 text-center">
+                  <div className="flex flex-col items-center gap-2 text-red-500">
+                    <AlertCircle size={32} />
+                    <p className="text-sm font-medium">
+                      Failed to load ORS plans.
+                    </p>
+                  </div>
+                </td>
+              </tr>
+            ) : plans.length > 0 ? (
+              plans.map((item: TORSPlan) => (
+                <tr
+                  key={item._id}
+                  className="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors"
+                >
+                  <td className="px-6 py-4 font-medium dark:text-gray-200">
+                    {item.vehicle}
+                  </td>
+                  <td className="px-6 py-4">
+                    <span
+                      className={`font-bold ${parseInt(item.roadWorthinessScore) > 80 ? 'text-green-500' : 'text-orange-500'}`}
+                    >
+                      {item.roadWorthinessScore}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span
+                      className={`px-2 py-1 text-xs font-bold rounded-full ${
+                        ['A', 'B', 'Good'].includes(item.overallTrafficScore)
+                          ? 'bg-green-100 text-green-600'
+                          : 'bg-red-100 text-red-600'
+                      }`}
+                    >
+                      {item.overallTrafficScore}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <div className="flex justify-end gap-2">
+                      <button
+                        className="p-2 text-gray-500 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
+                        title="View"
+                      >
+                        <Eye size={18} />
+                      </button>
+                      {canModify && (
+                        <>
+                          <button
+                            className="p-2 text-gray-500 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
+                            title="Edit"
+                          >
+                            <Pencil size={18} />
+                          </button>
+                          {user?.role === 'admin' && (
+                            <button
+                              className="p-2 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                              title="Delete"
+                            >
+                              <Trash2 size={18} />
+                            </button>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={4} className="px-6 py-10 text-center">
+                  <p className="text-gray-500 text-sm font-medium">
+                    No ORS plans found.
+                  </p>
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

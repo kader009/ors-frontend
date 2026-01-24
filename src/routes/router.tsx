@@ -5,6 +5,7 @@ import Login from '../pages/auth/Login';
 import Register from '../pages/auth/Register';
 import Dashboard from '../pages/dashboard/Dashboard';
 import ORSList from '../pages/ors/ORSList';
+import UserManage from '../pages/user/UserManage';
 
 export const route = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ export const route = createBrowserRouter([
       {
         path: 'ors',
         element: <ORSList />,
+      },
+      {
+        path: 'users',
+        element: <UserManage />,
       },
     ],
   },

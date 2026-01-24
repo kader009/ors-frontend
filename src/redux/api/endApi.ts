@@ -2,7 +2,6 @@ import { baseApi } from './baseApi';
 
 const ORSApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
-
     // register here
     register: build.mutation({
       query: (userInfo) => ({
@@ -20,7 +19,24 @@ const ORSApi = baseApi.injectEndpoints({
         body: userInfo,
       }),
     }),
+
+    // all user admin only
+    allUser: build.query({
+      query: () => ({
+        url: '/user',
+        method: 'GET',
+      }),
+    }),
+
+    // all ors plan (admin)
+    allOrsPlan: build.query({
+      query: () => ({
+        url: '/ors',
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
-export const { useRegisterMutation, useLoginMutation } = ORSApi;
+export const { useRegisterMutation, useLoginMutation, useAllUserQuery, useAllOrsPlanQuery } =
+  ORSApi;

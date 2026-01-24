@@ -5,6 +5,7 @@ import {
   SetEmail,
   SetPassword,
   SetRole,
+  ClearRegister,
 } from '../../redux/features/authentication/registerSlice';
 
 import { useState } from 'react';
@@ -43,6 +44,7 @@ const Register = () => {
       );
       if (registerUser.fulfilled.match(result)) {
         toast.success('Successfully created account!');
+        dispatch(ClearRegister());
         navigate('/dashboard');
       } else {
         toast.error(serverError || 'Failed to Register');

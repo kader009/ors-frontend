@@ -5,6 +5,7 @@ import { loginUser } from '../../redux/features/authentication/authSlice';
 import {
   SetEmail,
   SetPassword,
+  ClearLogin,
 } from '../../redux/features/authentication/loginSlice';
 
 import { useState } from 'react';
@@ -37,6 +38,7 @@ const Login = () => {
       const result = await dispatch(loginUser({ email, password }));
       if (loginUser.fulfilled.match(result)) {
         toast.success('Successfully logged in!');
+        dispatch(ClearLogin());
         navigate('/dashboard');
       } else {
         toast.error(serverError || 'Failed to login');

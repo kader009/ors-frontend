@@ -33,10 +33,17 @@ const registerSlice = createSlice({
     SetRole: (state, action: PayloadAction<string>) => {
       state.role = action.payload;
     },
+
+    ClearRegister: (state) => {
+      state.username = '';
+      state.email = '';
+      state.password = '';
+      state.role = '';
+    },
   },
 });
 
-export const { SetUsername, SetEmail, SetPassword, SetRole } =
+export const { SetUsername, SetEmail, SetPassword, SetRole, ClearRegister } =
   registerSlice.actions;
 
 export default registerSlice.reducer;

@@ -7,7 +7,6 @@ const MainLayout = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.user);
-  console.log(user)
 
   const handleLogout = () => {
     dispatch(logout());
