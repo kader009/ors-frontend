@@ -1,21 +1,23 @@
-import { createSlice, type PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import {
+  createSlice,
+  type PayloadAction,
+  createAsyncThunk,
+} from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 
 // User interface
 interface User {
   _id: string;
-  name: string;
+  username: string;
   email: string;
-  photoUrl: string;
   role: string;
 }
 
 interface LoginResponse {
   user: User;
   token: string;
-  name?: string | null | undefined;
+  username?: string | null | undefined;
   email?: string | null;
-  image?: string | null;
   role?: string;
 }
 
@@ -42,17 +44,44 @@ export const loginUser = createAsyncThunk<
 >('user/login', async (credentials, { rejectWithValue }) => {
   try {
     const response = await axios.post<LoginResponse>(
-      'https://study-platform-backend-drxm.onrender.com/api/v1/login',
+      'https://ors-backend-ys1m.onrender.com/api/v1/auth/login',
       credentials,
       {
         withCredentials: true,
-      }
+      },
     );
 
     const { user, token } = response.data;
     return { user, token };
   } catch (err) {
     let message = 'Something went wrong';
+    if (axios.isAxiosError(err)) {
+      const axiosErr = err as AxiosError<{ message?: string }>;
+      message = axiosErr.response?.data.message ?? axiosErr.message;
+    }
+    return rejectWithValue(message);
+  }
+});
+
+// Async thunk for register
+export const registerUser = createAsyncThunk<
+  LoginResponse,
+  { username: string; email: string; password: string; role: string },
+  { rejectValue: string }
+>('user/register', async (userInfo, { rejectWithValue }) => {
+  try {
+    const response = await axios.post<LoginResponse>(
+      'https://ors-backend-ys1m.onrender.com/api/v1/auth/register',
+      userInfo,
+      {
+        withCredentials: true,
+      },
+    );
+
+    const { user, token } = response.data;
+    return { user, token };
+  } catch (err) {
+    let message = 'Registration failed';
     if (axios.isAxiosError(err)) {
       const axiosErr = err as AxiosError<{ message?: string }>;
       message = axiosErr.response?.data.message ?? axiosErr.message;
@@ -77,6 +106,7 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // Login
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -87,6 +117,22 @@ const userSlice = createSlice({
         state.token = action.payload.token;
       })
       .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.user = null;
+        state.token = null;
+        state.error = action.payload ?? action.error.message ?? null;
+      })
+      // Register
+      .addCase(registerUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
         state.user = null;
         state.token = null;

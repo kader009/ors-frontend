@@ -1,15 +1,18 @@
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/hook';
 import { logout } from '../redux/features/authentication/authSlice';
+import toast from 'react-hot-toast';
 
 const MainLayout = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.user);
+  console.log(user)
 
   const handleLogout = () => {
     dispatch(logout());
     navigate('/auth/login');
+    toast.success('Successfully logged out!');
   };
 
   return (
@@ -56,17 +59,12 @@ const MainLayout = () => {
         {/* Navbar */}
         <header className="h-16 bg-white dark:bg-[#1c2632] border-b border-gray-200 dark:border-gray-800 flex items-center justify-between px-8">
           <h1 className="text-lg font-semibold text-gray-800 dark:text-white">
-            Welcome, {user?.name}
+            Welcome, {user?.username}
           </h1>
           <div className="flex items-center gap-4">
             <span className="px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full uppercase">
               {user?.role}
             </span>
-            <img
-              src={user?.photoUrl || 'https://via.placeholder.com/40'}
-              alt="profile"
-              className="w-10 h-10 rounded-full border border-primary/20"
-            />
           </div>
         </header>
 

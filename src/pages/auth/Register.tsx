@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../redux/hook';
 import {
   SetUsername,
@@ -14,17 +14,23 @@ import {
   type TRegisterSchema,
 } from '../../validation/authValidation';
 import toast from 'react-hot-toast';
+import type { RootState } from '../../redux/store/store';
+import { registerUser } from '../../redux/features/authentication/authSlice';
 
 const Register = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { username, email, password, role } = useAppSelector(
-    (state) => state.register,
+    (state: RootState) => state.register,
+  );
+  const { loading, error: serverError } = useAppSelector(
+    (state: RootState) => state.user,
   );
   const [errors, setErrors] = useState<
     Partial<Record<keyof TRegisterSchema, string>>
   >({});
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
 
@@ -32,8 +38,15 @@ const Register = () => {
       // Validate using Zod
       registerSchema.parse({ username, email, password, role });
 
-      console.log('Registering', { username, email, password, role });
-      // TODO: Implement registration logic via API
+      const result = await dispatch(
+        registerUser({ username, email, password, role }),
+      );
+      if (registerUser.fulfilled.match(result)) {
+        toast.success('Successfully created account!');
+        navigate('/dashboard');
+      } else {
+        toast.error(serverError || 'Failed to Register');
+      }
     } catch (err) {
       if (err instanceof z.ZodError) {
         const formattedErrors: Record<string, string> = {};
@@ -61,6 +74,11 @@ const Register = () => {
 
         <div className="bg-white dark:bg-[#1c2632] p-8 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800">
           <form className="space-y-4" onSubmit={handleSubmit}>
+            {serverError && (
+              <div className="p-3 bg-red-50 border border-red-100 text-red-600 text-sm rounded-lg text-center font-medium">
+                {serverError}
+              </div>
+            )}
             <div className="space-y-1">
               <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                 Full Name
@@ -129,10 +147,11 @@ const Register = () => {
             </div>
 
             <button
-              className="w-full h-12 bg-primary text-white font-bold rounded-xl mt-4 shadow-lg shadow-primary/30 hover:bg-primary/90 transition-all active:scale-95"
+              disabled={loading}
+              className="w-full h-12 bg-primary text-white font-bold rounded-xl mt-4 shadow-lg shadow-primary/30 hover:bg-primary/90 transition-all active:scale-95 disabled:opacity-70"
               type="submit"
             >
-              Crate Account
+              {loading ? 'Creating Account...' : 'Create Account'}
             </button>
           </form>
 

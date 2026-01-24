@@ -6,7 +6,7 @@ const ORSApi = baseApi.injectEndpoints({
     // register here
     register: build.mutation({
       query: (userInfo) => ({
-        url: '/api/v1/auth/register',
+        url: '/auth/register',
         method: 'POST',
         body: userInfo,
       }),
@@ -15,7 +15,7 @@ const ORSApi = baseApi.injectEndpoints({
     // login here
     login: build.mutation({
       query: (userInfo) => ({
-        url: '/api/v1/auth/login',
+        url: '/auth/login',
         method: 'POST',
         body: userInfo,
       }),

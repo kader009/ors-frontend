@@ -8,14 +8,20 @@ import {
 } from '../../redux/features/authentication/loginSlice';
 
 import { useState } from 'react';
-import { loginSchema, type TLoginSchema } from '../../validation/authValidation';
+import {
+  loginSchema,
+  type TLoginSchema,
+} from '../../validation/authValidation';
 import { z } from 'zod';
+import type { RootState } from '../../redux/store/store';
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { email, password } = useAppSelector((state) => state.login);
-  const { loading, error: serverError } = useAppSelector((state) => state.user);
+  const { email, password } = useAppSelector((state: RootState) => state.login);
+  const { loading, error: serverError } = useAppSelector(
+    (state: RootState) => state.user,
+  );
   const [errors, setErrors] = useState<
     Partial<Record<keyof TLoginSchema, string>>
   >({});
