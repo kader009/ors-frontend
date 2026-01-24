@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const baseApi = createApi({
   reducerPath: 'orsApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://ors-backend-ys1m.onrender.com/api/v1',
+    baseUrl: import.meta.env.VITE_BACKEND_API,
     prepareHeaders: (headers, { getState }) => {
       const state = getState() as any;
       const token = state.user?.token;

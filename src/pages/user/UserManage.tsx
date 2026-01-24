@@ -8,11 +8,23 @@ import {
 } from 'lucide-react';
 import { useAllUserQuery } from '../../redux/api/endApi';
 import type { TUser } from '../../types/user';
+import { useState } from 'react';
 
 const UserManage = () => {
   const { data, isLoading, isError } = useAllUserQuery(undefined);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [roleFilter, setRoleFilter] = useState('all');
 
   const users = data?.users || [];
+
+  const filteredUsers = users.filter((user: TUser) => {
+    const matchesSearch =
+      user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesRole = roleFilter === 'all' || user.role === roleFilter;
+
+    return matchesSearch && matchesRole;
+  });
 
   return (
     <main className="flex-1 overflow-y-auto p-6">
@@ -36,16 +48,33 @@ const UserManage = () => {
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
               />
               <input
-                className="w-full h-11 pl-10 pr-4 bg-background-light dark:bg-gray-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20"
+                className="w-full h-11 pl-10 pr-4 bg-background-light dark:bg-gray-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none"
                 placeholder="Search by name, email"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <div className="flex gap-2">
-              <button className="flex items-center gap-2 h-11 px-4 bg-background-light dark:bg-gray-800 rounded-lg text-sm font-medium text-[#111418] dark:text-white border border-transparent hover:border-gray-300">
-                <Filter size={18} />
-                <span>All Roles</span>
-                <ChevronDown size={18} />
-              </button>
+              <div className="relative">
+                <Filter
+                  size={16}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+                />
+                <select
+                  className="h-11 pl-10 pr-8 bg-background-light dark:bg-gray-800 rounded-lg text-sm font-medium text-[#111418] dark:text-white border border-transparent hover:border-gray-300 outline-none appearance-none transition-all cursor-pointer"
+                  value={roleFilter}
+                  onChange={(e) => setRoleFilter(e.target.value)}
+                >
+                  <option value="all">All Roles</option>
+                  <option value="admin">Admin</option>
+                  <option value="inspector">Inspector</option>
+                  <option value="viewer">Viewer</option>
+                </select>
+                <ChevronDown
+                  size={16}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -83,8 +112,8 @@ const UserManage = () => {
                       </p>
                     </td>
                   </tr>
-                ) : users.length > 0 ? (
-                  users.map((user: TUser) => (
+                ) : filteredUsers.length > 0 ? (
+                  filteredUsers.map((user: TUser) => (
                     <tr
                       key={user._id}
                       className="hover:bg-gray-50/80 dark:hover:bg-gray-800/50 transition-colors"
