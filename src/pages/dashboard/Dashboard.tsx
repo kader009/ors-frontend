@@ -156,7 +156,6 @@ const Dashboard = () => {
               Progression of vehicle readiness
             </p>
           </div>
-
         </div>
         <div className="h-48 flex items-end gap-2 relative">
           <div className="absolute inset-0 flex flex-col justify-between opacity-20 pointer-events-none">
@@ -224,13 +223,23 @@ const Dashboard = () => {
                   </td>
                   <td className="px-6 py-4 text-right">
                     <span
-                      className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${['A', 'B', 'Good'].includes(inspectionRow.overallTrafficScore) ? 'bg-[#eefaf2] text-[#07883b] dark:bg-green-500/10' : 'bg-[#fef2f2] text-[#e73908] dark:bg-red-500/10'}`}
+                      className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${
+                        ['A', 'B', 'Good'].includes(
+                          inspectionRow.overallTrafficScore,
+                        )
+                          ? 'bg-green-50 text-green-600 dark:bg-green-500/10'
+                          : inspectionRow.overallTrafficScore === 'C'
+                            ? 'bg-amber-50 text-amber-600 dark:bg-amber-500/10'
+                            : 'bg-red-50 text-red-600 dark:bg-red-500/10'
+                      }`}
                     >
                       {['A', 'B', 'Good'].includes(
                         inspectionRow.overallTrafficScore,
                       )
                         ? 'Passed'
-                        : inspectionRow.overallTrafficScore}
+                        : inspectionRow.overallTrafficScore === 'C'
+                          ? 'Average'
+                          : inspectionRow.overallTrafficScore}
                     </span>
                   </td>
                 </tr>

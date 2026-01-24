@@ -76,6 +76,15 @@ const ORSApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['ORS'],
     }),
+
+    createOrsPlan: build.mutation({
+      query: (orsData) => ({
+        url: '/ors',
+        method: 'POST',
+        body: orsData,
+      }),
+      invalidatesTags: ['ORS'],
+    }),
   }),
 });
 
@@ -88,4 +97,5 @@ export const {
   useUserUpdateMutation,
   useOrsDeleteMutation,
   useOrsUpdateMutation,
+  useCreateOrsPlanMutation,
 } = ORSApi;

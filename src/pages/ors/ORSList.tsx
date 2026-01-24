@@ -7,10 +7,16 @@ import { Loader2, AlertCircle, Pencil, Trash2 } from 'lucide-react';
 import type { TORSPlan } from '../../types/ors';
 import toast from 'react-hot-toast';
 
+import { useState } from 'react';
+import ORSPlanModal from '../../components/ORSPlanModal';
+import ORSUpdateModal from '../../components/ORSUpdateModal';
+
 const ORSList = () => {
   const { user } = useAppSelector((state) => state.user);
   const { data, isLoading, isError } = useAllOrsPlanQuery(undefined);
   const [deleteOrs] = useOrsDeleteMutation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<TORSPlan | null>(null);
 
   const plans = data?.data || [];
 
@@ -48,20 +54,34 @@ const ORSList = () => {
     <div className="p-6 max-w-7xl mx-auto w-full space-y-6">
       <div className="flex justify-between items-center">
         <div className="flex flex-col">
-          <h1 className="text-xl font-bold dark:text-white">
-            ORS Plans Management
+          <h1 className="text-[#111418] dark:text-white text-3xl font-black tracking-tight">
+            Ors Plans Management
           </h1>
-          <p>
+          <p className="text-[#617289] dark:text-gray-400 text-sm font-normal">
             Monitor and manage vehicle operational roadworthiness scores for the
             North region.
           </p>
         </div>
         {canModify && (
-          <button className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg font-bold transition-all shadow-md active:scale-95">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg font-bold transition-all shadow-md active:scale-95 cursor-pointer"
+          >
             + New ORS Plan
           </button>
         )}
       </div>
+
+      <ORSPlanModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+
+      <ORSUpdateModal
+        isOpen={!!selectedPlan}
+        planData={selectedPlan}
+        onClose={() => setSelectedPlan(null)}
+      />
 
       <div className="bg-white dark:bg-[#1c2632] rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
         <table className="w-full text-left">
@@ -134,7 +154,8 @@ const ORSList = () => {
                       {canModify && (
                         <>
                           <button
-                            className="p-2 text-gray-500 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
+                            onClick={() => setSelectedPlan(item)}
+                            className="p-2 text-gray-500 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
                             title="Edit"
                           >
                             <Pencil size={18} />
