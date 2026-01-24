@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+@import 'tailwindcss';
+
+/* Project color variables for reuse */
+@theme {
+  --color-primary: #136dec;
+  --color-background-light: #f0fff0;
+  --color-background-dark: #102219;
+}
+
+html,
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  min-height: 100vh;
+  background-color: #f8fafc; /* Light default */
+  transition: background-color 0.3s ease;
+}
+
+@media (prefers-color-scheme: dark) {
+  html,
+  body {
+    background-color: #0f172a; /* Dark default */
+  }
+}
