@@ -6,14 +6,32 @@ import {
   Trash2,
   Loader2,
 } from 'lucide-react';
-import { useAllUserQuery } from '../../redux/api/endApi';
+import {
+  useAllUserQuery,
+  useUserDeleteMutation,
+  useUserUpdateMutation,
+} from '../../redux/api/endApi';
 import type { TUser } from '../../types/user';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
+import UserEditModal from '../../components/UserEditModal';
 
 const UserManage = () => {
   const { data, isLoading, isError } = useAllUserQuery(undefined);
+  const [deleteUser] = useUserDeleteMutation();
+  const [updateUser, { isLoading: isUpdating }] = useUserUpdateMutation();
+
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('all');
+
+  // Edit Modal State
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState<TUser | null>(null);
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    role: '',
+  });
 
   const users = data?.users || [];
 
@@ -26,14 +44,65 @@ const UserManage = () => {
     return matchesSearch && matchesRole;
   });
 
+  const handleDelete = (userId: string) => {
+    toast((t) => (
+      <div className="flex items-center gap-4 text-sm font-semibold">
+        <span>Permanently delete?</span>
+        <button
+          onClick={async () => {
+            toast.dismiss(t.id);
+            try {
+              await deleteUser(userId).unwrap();
+              toast.success('User deleted');
+            } catch {
+              toast.error('Failed to delete');
+            }
+          }}
+          className="text-red-600 hover:underline cursor-pointer"
+        >
+          Yes
+        </button>
+        <button onClick={() => toast.dismiss(t.id)} className="text-gray-500 cursor-pointer">
+          Cancel
+        </button>
+      </div>
+    ));
+  };
+
+  const handleEditClick = (user: TUser) => {
+    setEditingUser(user);
+    setFormData({
+      username: user.username,
+      email: user.email,
+      role: user.role,
+    });
+    setIsEditModalOpen(true);
+  };
+
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingUser) return;
+
+    try {
+      await updateUser({
+        userId: editingUser._id,
+        role: formData.role,
+      }).unwrap();
+      toast.success('User updated successfully');
+      setIsEditModalOpen(false);
+    } catch {
+      toast.error('Failed to update user');
+    }
+  };
+
   return (
     <main className="flex-1 overflow-y-auto p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         <div className="flex flex-wrap justify-between items-end gap-4">
           <div className="space-y-1">
-            <h2 className="text-[#111418] dark:text-white text-3xl font-black tracking-tight">
+            <h1 className="text-[#111418] dark:text-white text-3xl font-black tracking-tight">
               System Users
-            </h2>
+            </h1>
             <p className="text-[#617289] dark:text-gray-400 text-base">
               Manage personnel roles, access levels, and security status across
               the ORS platform.
@@ -137,10 +206,16 @@ const UserManage = () => {
                       </td>
                       <td className="px-6 py-4 text-right">
                         <div className="flex justify-end gap-2">
-                          <button className="p-2 text-gray-500 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors">
+                          <button
+                            onClick={() => handleEditClick(user)}
+                            className="p-2 text-gray-500 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
+                          >
                             <Pencil size={18} />
                           </button>
-                          <button className="p-2 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                          <button
+                            onClick={() => handleDelete(user._id)}
+                            className="p-2 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          >
                             <Trash2 size={18} />
                           </button>
                         </div>
@@ -161,6 +236,15 @@ const UserManage = () => {
           </div>
         </div>
       </div>
+
+      <UserEditModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        formData={formData}
+        setFormData={setFormData}
+        onSubmit={handleUpdate}
+        isUpdating={isUpdating}
+      />
     </main>
   );
 };

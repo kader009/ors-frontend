@@ -1,20 +1,61 @@
 import { useAppSelector } from '../../redux/hook';
-import { useAllOrsPlanQuery } from '../../redux/api/endApi';
-import { Loader2, AlertCircle, Eye, Pencil, Trash2 } from 'lucide-react';
+import {
+  useAllOrsPlanQuery,
+  useOrsDeleteMutation,
+} from '../../redux/api/endApi';
+import { Loader2, AlertCircle, Pencil, Trash2 } from 'lucide-react';
 import type { TORSPlan } from '../../types/ors';
+import toast from 'react-hot-toast';
 
 const ORSList = () => {
   const { user } = useAppSelector((state) => state.user);
   const { data, isLoading, isError } = useAllOrsPlanQuery(undefined);
+  const [deleteOrs] = useOrsDeleteMutation();
 
   const plans = data?.data || [];
 
   const canModify = user?.role === 'admin' || user?.role === 'inspector';
 
+  const handleOrsDelete = (orsId: string) => {
+    toast((t) => (
+      <div className="flex items-center gap-4 text-sm font-semibold">
+        <span>Permanently delete?</span>
+        <button
+          onClick={async () => {
+            toast.dismiss(t.id);
+            try {
+              await deleteOrs(orsId).unwrap();
+              toast.success('ORS plan deleted');
+            } catch {
+              toast.error('Failed to delete');
+            }
+          }}
+          className="text-red-600 hover:underline cursor-pointer"
+        >
+          Yes
+        </button>
+        <button
+          onClick={() => toast.dismiss(t.id)}
+          className="text-gray-500 cursor-pointer"
+        >
+          Cancel
+        </button>
+      </div>
+    ));
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold dark:text-white">Vehicle ORS Plans</h2>
+        <div className="flex flex-col">
+          <h1 className="text-xl font-bold dark:text-white">
+            ORS Plans Management
+          </h1>
+          <p>
+            Monitor and manage vehicle operational roadworthiness scores for the
+            North region.
+          </p>
+        </div>
         {canModify && (
           <button className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg font-bold transition-all shadow-md active:scale-95">
             + New ORS Plan
@@ -90,12 +131,6 @@ const ORSList = () => {
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex justify-end gap-2">
-                      <button
-                        className="p-2 text-gray-500 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
-                        title="View"
-                      >
-                        <Eye size={18} />
-                      </button>
                       {canModify && (
                         <>
                           <button
@@ -106,7 +141,8 @@ const ORSList = () => {
                           </button>
                           {user?.role === 'admin' && (
                             <button
-                              className="p-2 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                              onClick={() => handleOrsDelete(item._id)}
+                              className="p-2 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
                               title="Delete"
                             >
                               <Trash2 size={18} />

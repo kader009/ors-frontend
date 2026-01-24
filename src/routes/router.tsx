@@ -4,7 +4,7 @@ import ProtectedRoute from './ProtectedRoute';
 import Login from '../pages/auth/Login';
 import Register from '../pages/auth/Register';
 import Dashboard from '../pages/dashboard/Dashboard';
-import ORSList from '../pages/ors/ORSList';
+import ORSList from '../pages/ors/OrsList';
 import UserManage from '../pages/user/UserManage';
 
 export const route = createBrowserRouter([

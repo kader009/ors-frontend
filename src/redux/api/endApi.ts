@@ -26,6 +26,26 @@ const ORSApi = baseApi.injectEndpoints({
         url: '/user',
         method: 'GET',
       }),
+      providesTags: ['User'],
+    }),
+
+    // user delete for admin
+    userDelete: build.mutation({
+      query: (userId) => ({
+        url: `/user/${userId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['User'],
+    }),
+
+    // update user
+    userUpdate: build.mutation({
+      query: ({ userId, role }) => ({
+        url: `/user/${userId}/role`,
+        method: 'PATCH',
+        body: { role },
+      }),
+      invalidatesTags: ['User'],
     }),
 
     // all ors plan (admin)
@@ -34,9 +54,38 @@ const ORSApi = baseApi.injectEndpoints({
         url: '/ors',
         method: 'GET',
       }),
+      providesTags: ['ORS'],
+    }),
+
+    // ors plan delete (admin)
+    orsDelete: build.mutation({
+      query: (orsId) => ({
+        url: `/ors/${orsId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['ORS'],
+    }),
+
+    // ors plan update (admin & inspector)
+
+    orsUpdate: build.mutation({
+      query: ({ orsId, orsData }) => ({
+        url: `/ors/${orsId}`,
+        method: 'PUT',
+        body: orsData,
+      }),
+      invalidatesTags: ['ORS'],
     }),
   }),
 });
 
-export const { useRegisterMutation, useLoginMutation, useAllUserQuery, useAllOrsPlanQuery } =
-  ORSApi;
+export const {
+  useRegisterMutation,
+  useLoginMutation,
+  useAllUserQuery,
+  useAllOrsPlanQuery,
+  useUserDeleteMutation,
+  useUserUpdateMutation,
+  useOrsDeleteMutation,
+  useOrsUpdateMutation,
+} = ORSApi;
