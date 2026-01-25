@@ -32,7 +32,20 @@ const ORSList = () => {
 
   const plans = data?.data || [];
 
-  const filteredPlans = plans.filter((plan: TORSPlan) => {
+  // If the current user is an inspector, only show plans assigned to them
+  // or created by them. Admins and viewers see all (admins can modify).
+  const extractUserId = (ref?: string | { _id?: string } | null) =>
+    typeof ref === 'string' ? ref : ref && typeof ref === 'object' ? ref._id : undefined;
+
+  const visiblePlans = user?.role === 'inspector'
+    ? plans.filter((plan: TORSPlan) => {
+        const assignedId = extractUserId(plan.assignedTo);
+        const createdId = extractUserId(plan.createdBy);
+        return String(assignedId) === String(user?._id) || String(createdId) === String(user?._id);
+      })
+    : plans;
+
+  const filteredPlans = visiblePlans.filter((plan: TORSPlan) => {
     const matchesSearch = plan.vehicle
       .toLowerCase()
       .includes(searchTerm.toLowerCase());

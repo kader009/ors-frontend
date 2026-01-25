@@ -16,6 +16,15 @@ export interface TORSPlan {
   actionRequired: string;
   documents: TDocument[];
   createdAt: string;
+  // optional references to user; can be populated objects or raw ObjectId string
+  assignedTo?:
+    | string
+    | { _id: string; username?: string; email?: string }
+    | null;
+  createdBy?:
+    | string
+    | { _id: string; username?: string; email?: string }
+    | null;
 }
 
 export interface TORSPlanResponse {

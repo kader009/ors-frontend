@@ -9,8 +9,10 @@ import {
   Trash2,
   Link,
 } from 'lucide-react';
-import { useCreateOrsPlanMutation } from '../redux/api/endApi';
+import { useCreateOrsPlanMutation, useAllUserQuery } from '../redux/api/endApi';
+import { useAppSelector } from '../redux/hook';
 import { toast } from 'react-hot-toast';
+import { UserCheck } from 'lucide-react';
 
 interface ORSPlanModalProps {
   isOpen: boolean;
@@ -22,6 +24,7 @@ const initialState = {
   roadWorthinessScore: '',
   overallTrafficScore: 'B',
   actionRequired: '',
+  assignedTo: '',
   documents: [
     {
       textDoc: [{ label: '', description: '' }],
@@ -32,9 +35,14 @@ const initialState = {
 
 const ORSPlanModal: React.FC<ORSPlanModalProps> = ({ isOpen, onClose }) => {
   const [createPlan, { isLoading }] = useCreateOrsPlanMutation();
+  const { user } = useAppSelector((state) => state.user);
+  const { data: userData } = useAllUserQuery(undefined);
 
   // Local Form State based on requested JSON
   const [formData, setFormData] = useState(initialState);
+
+  const inspectors =
+    userData?.users?.filter((u: any) => u.role === 'inspector') || [];
 
   if (!isOpen) return null;
 
@@ -87,6 +95,7 @@ const ORSPlanModal: React.FC<ORSPlanModalProps> = ({ isOpen, onClose }) => {
         roadWorthinessScore: formData.roadWorthinessScore.includes('%')
           ? formData.roadWorthinessScore
           : `${formData.roadWorthinessScore}%`,
+        assignedTo: formData.assignedTo || undefined,
       };
       await createPlan(finalData).unwrap();
       toast.success('ORS Plan created successfully');
@@ -129,6 +138,28 @@ const ORSPlanModal: React.FC<ORSPlanModalProps> = ({ isOpen, onClose }) => {
           onSubmit={handleSubmit}
           className="p-4 space-y-3 max-h-[85vh] overflow-y-auto custom-scrollbar"
         >
+          {user?.role === 'admin' && (
+            <div className="space-y-1 bg-blue-50 dark:bg-blue-900/10 p-3 rounded-lg border border-blue-100 dark:border-blue-900/30">
+              <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-bold text-sm mb-2">
+                <UserCheck size={16} /> <span>Assign Inspector (Optional)</span>
+              </div>
+              <select
+                value={formData.assignedTo}
+                onChange={(e) =>
+                  setFormData({ ...formData, assignedTo: e.target.value })
+                }
+                className="w-full px-3 py-1.5 bg-white dark:bg-gray-800 border border-blue-200 dark:border-blue-800 rounded-lg outline-none focus:ring-2 focus:ring-blue-500/20 text-sm dark:text-white"
+              >
+                <option value="">-- Assign to Me (Default) --</option>
+                {inspectors.map((inspector: any) => (
+                  <option key={inspector._id} value={inspector._id}>
+                    {inspector.username} ({inspector.email})
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
           {/* Section: Vehicle Information */}
           <div className="space-y-3">
             <div className="flex items-center gap-2 text-primary font-bold text-sm">

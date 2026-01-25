@@ -1,4 +1,5 @@
 import { Outlet, Link, useNavigate } from 'react-router-dom';
+import { LayoutDashboard, FileText, Users, LogOut } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../redux/hook';
 import { logout } from '../redux/features/authentication/authSlice';
 import toast from 'react-hot-toast';
@@ -24,21 +25,24 @@ const MainLayout = () => {
         <nav className="flex-1 px-4 space-y-2">
           <Link
             to="/dashboard"
-            className="flex items-center p-3 text-gray-700 dark:text-gray-200 hover:bg-primary/10 rounded-lg transition-colors"
+            className="flex items-center gap-3 p-3 text-gray-700 dark:text-gray-200 hover:bg-primary/10 rounded-lg transition-colors font-medium"
           >
+            <LayoutDashboard size={20} />
             <span>Dashboard</span>
           </Link>
           <Link
             to="/ors"
-            className="flex items-center p-3 text-gray-700 dark:text-gray-200 hover:bg-primary/10 rounded-lg transition-colors"
+            className="flex items-center gap-3 p-3 text-gray-700 dark:text-gray-200 hover:bg-primary/10 rounded-lg transition-colors font-medium"
           >
+            <FileText size={20} />
             <span>ORS Plans</span>
           </Link>
           {user?.role === 'admin' && (
             <Link
               to="/users"
-              className="flex items-center p-3 text-gray-700 dark:text-gray-200 hover:bg-primary/10 rounded-lg transition-colors"
+              className="flex items-center gap-3 p-3 text-gray-700 dark:text-gray-200 hover:bg-primary/10 rounded-lg transition-colors font-medium"
             >
+              <Users size={20} />
               <span>Users</span>
             </Link>
           )}
@@ -46,9 +50,10 @@ const MainLayout = () => {
         <div className="p-4 border-t border-gray-100 dark:border-gray-700">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center p-3 text-red-500 hover:bg-red-50 rounded-lg transition-colors px-4 font-semibold"
+            className="w-full flex items-center gap-3 p-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors px-4 font-semibold cursor-pointer"
           >
-            Logout
+            <LogOut size={20} />
+            <span>Logout</span>
           </button>
         </div>
       </aside>
