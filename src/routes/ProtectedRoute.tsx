@@ -1,10 +1,6 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAppSelector } from '../redux/hook';
-
-interface ProtectedRouteProps {
-  children: React.ReactNode;
-  allowedRoles?: string[];
-}
+import type { ProtectedRouteProps } from '../types/protectedProps';
 
 const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
   const { user, token } = useAppSelector((state) => state.user);

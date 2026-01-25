@@ -1,4 +1,4 @@
-export interface TUser{
+export interface TUser {
   _id: string;
   username: string;
   email: string;
