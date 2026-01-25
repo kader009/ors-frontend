@@ -36,7 +36,9 @@ const initialState = {
 const ORSPlanModal: React.FC<ORSPlanModalProps> = ({ isOpen, onClose }) => {
   const [createPlan, { isLoading }] = useCreateOrsPlanMutation();
   const { user } = useAppSelector((state) => state.user);
-  const { data: userData } = useAllUserQuery(undefined);
+  const { data: userData } = useAllUserQuery(undefined, {
+    skip: user?.role !== 'admin',
+  });
 
   // Local Form State based on requested JSON
   const [formData, setFormData] = useState(initialState);

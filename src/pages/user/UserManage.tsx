@@ -18,9 +18,13 @@ import UserEditModal from '../../components/UserEditModal';
 import UserCreateModal from '../../components/UserCreateModal';
 import TableRowSkeleton from '../../components/skeletons/TableRowSkeleton';
 import Skeleton from '../../components/skeletons/Skeleton';
+import { useAppSelector } from '../../redux/hook';
 
 const UserManage = () => {
-  const { data, isLoading, isError } = useAllUserQuery(undefined);
+  const { user } = useAppSelector((state) => state.user);
+  const { data, isLoading, isError } = useAllUserQuery(undefined, {
+    skip: user?.role !== 'admin',
+  });
   const [deleteUser] = useUserDeleteMutation();
   const [updateUser, { isLoading: isUpdating }] = useUserUpdateMutation();
 

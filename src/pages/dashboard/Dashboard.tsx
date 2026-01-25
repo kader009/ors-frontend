@@ -6,16 +6,20 @@ import type { TUser } from '../../types/user';
 import DashboardSkeleton from '../../components/skeletons/DashboardSkeleton';
 
 const Dashboard = () => {
+  const { user } = useAppSelector((show) => show.user);
   const {
     data: orsData,
     isLoading: isOrsLoading,
     isError: isOrsError,
   } = useAllOrsPlanQuery(undefined);
-  const { data: userData, isLoading: isUserLoading } =
-    useAllUserQuery(undefined);
+  const { data: userData, isLoading: isUserLoading } = useAllUserQuery(
+    undefined,
+    {
+      skip: user?.role !== 'admin',
+    },
+  );
 
   const plans: TORSPlan[] = orsData?.data || [];
-  const { user } = useAppSelector((show) => show.user);
 
   const extractUserId = (ref?: string | { _id?: string } | null) =>
     typeof ref === 'string'

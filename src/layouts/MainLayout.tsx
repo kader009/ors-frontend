@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../redux/hook';
 import { logout } from '../redux/features/authentication/authSlice';
+import { baseApi } from '../redux/api/baseApi';
 import toast from 'react-hot-toast';
 import { useEffect, useState } from 'react';
 
@@ -19,6 +20,7 @@ const MainLayout = () => {
 
   const handleLogout = () => {
     dispatch(logout());
+    dispatch(baseApi.util.resetApiState());
     navigate('/auth/login');
     toast.success('Successfully logged out!');
   };
