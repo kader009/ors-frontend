@@ -133,7 +133,7 @@ const UserManage = () => {
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
               />
               <input
-                className="w-full h-11 pl-10 pr-4 bg-background-light dark:bg-gray-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none dark:text-white dark:placeholder-gray-400"
+                className="w-full h-11 pl-10 pr-4 bg-gray-50 dark:bg-gray-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none dark:text-white"
                 placeholder="Search by name, email"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -146,7 +146,7 @@ const UserManage = () => {
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
                 />
                 <select
-                  className="h-11 pl-10 pr-8 bg-background-light dark:bg-gray-800 rounded-lg text-sm font-medium text-[#111418] dark:text-white border border-transparent hover:border-gray-300 outline-none appearance-none transition-all cursor-pointer"
+                  className="h-11 pl-10 pr-8 bg-gray-50 dark:bg-gray-800 rounded-lg text-xs font-bold dark:text-white outline-none appearance-none cursor-pointer border-none"
                   value={roleFilter}
                   onChange={(e) => setRoleFilter(e.target.value)}
                 >
