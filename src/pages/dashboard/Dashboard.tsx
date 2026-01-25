@@ -15,7 +15,7 @@ const Dashboard = () => {
     useAllUserQuery(undefined);
 
   const plans: TORSPlan[] = orsData?.data || [];
-  const { user } = useAppSelector((s) => s.user);
+  const { user } = useAppSelector((show) => show.user);
 
   const extractUserId = (ref?: string | { _id?: string } | null) =>
     typeof ref === 'string'
@@ -247,49 +247,63 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-[#f0f2f4] dark:divide-gray-700">
-              {recentInspections.map((inspectionRow) => (
-                <tr
-                  key={inspectionRow._id}
-                  className="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors text-sm dark:text-gray-300"
-                >
-                  <td className="px-6 py-4 font-bold">
-                    {inspectionRow.vehicle}
-                  </td>
+              {recentInspections.length === 0 ? (
+                <tr>
                   <td
-                    className={`px-6 py-4 text-center font-black ${
-                      parseScore(inspectionRow.roadWorthinessScore) >= 80
-                        ? 'text-[#07883b]'
-                        : parseScore(inspectionRow.roadWorthinessScore) >= 60
-                          ? 'text-orange-500'
-                          : 'text-red-500'
-                    }`}
+                    colSpan={3}
+                    className="px-6 py-12 text-center text-gray-500"
                   >
-                    {String(inspectionRow.roadWorthinessScore).replace('%', '')}
-                    %
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <span
-                      className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${
-                        ['A', 'B', 'Good'].includes(
-                          inspectionRow.overallTrafficScore,
-                        )
-                          ? 'bg-green-50 text-green-600 dark:bg-green-500/10'
-                          : inspectionRow.overallTrafficScore === 'C'
-                            ? 'bg-amber-50 text-amber-600 dark:bg-amber-500/10'
-                            : 'bg-red-50 text-red-600 dark:bg-red-500/10'
-                      }`}
-                    >
-                      {['A', 'B', 'Good'].includes(
-                        inspectionRow.overallTrafficScore,
-                      )
-                        ? 'Passed'
-                        : inspectionRow.overallTrafficScore === 'C'
-                          ? 'Average'
-                          : inspectionRow.overallTrafficScore}
-                    </span>
+                    No recent inspections available.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                recentInspections.map((inspectionRow) => (
+                  <tr
+                    key={inspectionRow._id}
+                    className="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors text-sm dark:text-gray-300"
+                  >
+                    <td className="px-6 py-4 font-bold">
+                      {inspectionRow.vehicle}
+                    </td>
+                    <td
+                      className={`px-6 py-4 text-center font-black ${
+                        parseScore(inspectionRow.roadWorthinessScore) >= 80
+                          ? 'text-[#07883b]'
+                          : parseScore(inspectionRow.roadWorthinessScore) >= 60
+                            ? 'text-orange-500'
+                            : 'text-red-500'
+                      }`}
+                    >
+                      {String(inspectionRow.roadWorthinessScore).replace(
+                        '%',
+                        '',
+                      )}
+                      %
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <span
+                        className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${
+                          ['A', 'B', 'Good'].includes(
+                            inspectionRow.overallTrafficScore,
+                          )
+                            ? 'bg-green-50 text-green-600 dark:bg-green-500/10'
+                            : inspectionRow.overallTrafficScore === 'C'
+                              ? 'bg-amber-50 text-amber-600 dark:bg-amber-500/10'
+                              : 'bg-red-50 text-red-600 dark:bg-red-500/10'
+                        }`}
+                      >
+                        {['A', 'B', 'Good'].includes(
+                          inspectionRow.overallTrafficScore,
+                        )
+                          ? 'Passed'
+                          : inspectionRow.overallTrafficScore === 'C'
+                            ? 'Average'
+                            : inspectionRow.overallTrafficScore}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

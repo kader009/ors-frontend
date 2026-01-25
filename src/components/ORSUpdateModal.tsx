@@ -32,7 +32,13 @@ const ORSUpdateModal: React.FC<ORSUpdateModalProps> = ({
     roadWorthinessScore: data?.roadWorthinessScore || '',
     overallTrafficScore: data?.overallTrafficScore || 'B',
     actionRequired: data?.actionRequired || '',
-    documents: data?.documents || [
+    // Always create fresh arrays/objects to avoid mutating frozen RTK Query data
+    documents: data?.documents?.map((doc) => ({
+      textDoc: doc.textDoc?.map((t) => ({ ...t })) || [
+        { label: '', description: '' },
+      ],
+      attachments: doc.attachments ? [...doc.attachments] : ([] as string[]),
+    })) || [
       {
         textDoc: [{ label: '', description: '' }],
         attachments: [] as string[],
@@ -52,13 +58,19 @@ const ORSUpdateModal: React.FC<ORSUpdateModalProps> = ({
   if (!isOpen || !planData) return null;
 
   const handleAddNote = () => {
-    const newDocs = [...formData.documents];
+    const newDocs = formData.documents.map((d) => ({
+      textDoc: d.textDoc.map((t) => ({ ...t })),
+      attachments: [...d.attachments],
+    }));
     newDocs[0].textDoc.push({ label: '', description: '' });
     setFormData({ ...formData, documents: newDocs });
   };
 
   const handleRemoveNote = (index: number) => {
-    const newDocs = [...formData.documents];
+    const newDocs = formData.documents.map((d) => ({
+      textDoc: d.textDoc.map((t) => ({ ...t })),
+      attachments: [...d.attachments],
+    }));
     newDocs[0].textDoc.splice(index, 1);
     setFormData({ ...formData, documents: newDocs });
   };
@@ -68,25 +80,37 @@ const ORSUpdateModal: React.FC<ORSUpdateModalProps> = ({
     field: 'label' | 'description',
     value: string,
   ) => {
-    const newDocs = [...formData.documents];
+    const newDocs = formData.documents.map((d) => ({
+      textDoc: d.textDoc.map((t) => ({ ...t })),
+      attachments: [...d.attachments],
+    }));
     newDocs[0].textDoc[index][field] = value;
     setFormData({ ...formData, documents: newDocs });
   };
 
   const handleAddAttachment = () => {
-    const newDocs = [...formData.documents];
+    const newDocs = formData.documents.map((d) => ({
+      textDoc: d.textDoc.map((t) => ({ ...t })),
+      attachments: [...d.attachments],
+    }));
     newDocs[0].attachments.push('');
     setFormData({ ...formData, documents: newDocs });
   };
 
   const handleRemoveAttachment = (index: number) => {
-    const newDocs = [...formData.documents];
+    const newDocs = formData.documents.map((d) => ({
+      textDoc: d.textDoc.map((t) => ({ ...t })),
+      attachments: [...d.attachments],
+    }));
     newDocs[0].attachments.splice(index, 1);
     setFormData({ ...formData, documents: newDocs });
   };
 
   const handleAttachmentChange = (index: number, value: string) => {
-    const newDocs = [...formData.documents];
+    const newDocs = formData.documents.map((d) => ({
+      textDoc: d.textDoc.map((t) => ({ ...t })),
+      attachments: [...d.attachments],
+    }));
     newDocs[0].attachments[index] = value;
     setFormData({ ...formData, documents: newDocs });
   };
