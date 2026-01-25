@@ -109,7 +109,7 @@ const ORSPlanModal: React.FC<ORSPlanModalProps> = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 overflow-y-auto">
       {/* Background Overlay - Optimized to cover everything */}
       <div
         className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
@@ -117,7 +117,7 @@ const ORSPlanModal: React.FC<ORSPlanModalProps> = ({ isOpen, onClose }) => {
       />
 
       {/* Modal Box - More compact width and height */}
-      <div className="relative bg-[#f8fafc] dark:bg-gray-900 w-full max-w-lg rounded-xl shadow-2xl overflow-hidden animate-in zoom-in duration-200">
+      <div className="relative bg-[#f8fafc] dark:bg-gray-900 w-full max-w-lg max-h-screen sm:max-h-[95vh] sm:rounded-xl shadow-2xl overflow-hidden animate-in zoom-in duration-200">
         {/* Header - Compact height */}
         <div className="px-5 py-2.5 border-b border-gray-200 dark:border-gray-800 flex justify-between items-center bg-white dark:bg-gray-900">
           <div>
@@ -138,7 +138,7 @@ const ORSPlanModal: React.FC<ORSPlanModalProps> = ({ isOpen, onClose }) => {
 
         <form
           onSubmit={handleSubmit}
-          className="p-4 space-y-3 max-h-[85vh] overflow-y-auto custom-scrollbar"
+          className="p-3 sm:p-4 space-y-3 max-h-[calc(100vh-140px)] sm:max-h-[75vh] overflow-y-auto custom-scrollbar"
         >
           {user?.role === 'admin' && (
             <div className="space-y-1 bg-blue-50 dark:bg-blue-900/10 p-3 rounded-lg border border-blue-100 dark:border-blue-900/30">
@@ -167,7 +167,7 @@ const ORSPlanModal: React.FC<ORSPlanModalProps> = ({ isOpen, onClose }) => {
             <div className="flex items-center gap-2 text-primary font-bold text-sm">
               <Truck size={16} /> <span>Vehicle Information</span>
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1">
                 <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
                   License Plate / Vehicle ID
@@ -210,7 +210,7 @@ const ORSPlanModal: React.FC<ORSPlanModalProps> = ({ isOpen, onClose }) => {
             <div className="flex items-center gap-2 text-primary font-bold text-sm">
               <BarChart3 size={16} /> <span>ORS Scores</span>
             </div>
-            <div className="grid grid-cols-3 gap-3 items-end">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
               <div className="space-y-1">
                 <label className="text-[9px] font-black text-gray-400 uppercase">
                   Roadworthiness %
@@ -229,7 +229,7 @@ const ORSPlanModal: React.FC<ORSPlanModalProps> = ({ isOpen, onClose }) => {
                   className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-900 border-none rounded-lg text-center font-bold text-base focus:ring-2 focus:ring-primary/20 text-gray-700 dark:text-white outline-none"
                 />
               </div>
-              <div className="col-span-2 bg-primary/5 dark:bg-primary/10 p-2 rounded-lg border border-primary/20 flex flex-col items-center justify-center">
+              <div className="sm:col-span-2 bg-primary/5 dark:bg-primary/10 p-2 rounded-lg border border-primary/20 flex flex-col items-center justify-center">
                 <span className="text-[9px] font-black text-primary uppercase">
                   Calculated Total ORS
                 </span>
@@ -347,7 +347,7 @@ const ORSPlanModal: React.FC<ORSPlanModalProps> = ({ isOpen, onClose }) => {
         </form>
 
         {/* Footer */}
-        <div className="px-6 py-2.5 border-t border-gray-200 dark:border-gray-800 flex justify-end gap-2 bg-white dark:bg-gray-900">
+        <div className="px-6 py-2.5 border-t border-gray-200 dark:border-gray-800 flex justify-end gap-2 bg-white dark:bg-gray-900 sticky bottom-0">
           <button
             onClick={onClose}
             type="button"

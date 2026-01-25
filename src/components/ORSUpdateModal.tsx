@@ -138,13 +138,13 @@ const ORSUpdateModal: React.FC<ORSUpdateModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 overflow-y-auto">
       <div
         className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
-      <div className="relative bg-[#f8fafc] dark:bg-gray-900 w-full max-w-lg rounded-xl shadow-2xl overflow-hidden animate-in zoom-in duration-200">
+      <div className="relative bg-[#f8fafc] dark:bg-gray-900 w-full max-w-lg max-h-screen sm:max-h-[95vh] sm:rounded-xl shadow-2xl overflow-hidden animate-in zoom-in duration-200">
         {/* Header */}
         <div className="px-5 py-2.5 border-b border-gray-200 dark:border-gray-800 flex justify-between items-center bg-white dark:bg-gray-900">
           <div>
@@ -173,7 +173,7 @@ const ORSUpdateModal: React.FC<ORSUpdateModalProps> = ({
                 <div className="flex items-center gap-2 text-primary font-bold text-sm">
                   <Truck size={16} /> <span>Vehicle Information</span>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1">
                     <label className="text-[10px] font-bold text-gray-500 uppercase">
                       License Plate
@@ -387,12 +387,12 @@ const ORSUpdateModal: React.FC<ORSUpdateModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="px-5 py-2.5 border-t border-gray-200 dark:border-gray-800 flex justify-end gap-2 bg-white dark:bg-gray-900">
+        <div className="px-5 py-2.5 border-t border-gray-200 dark:border-gray-800 flex justify-end gap-2 bg-white dark:bg-gray-900 sticky bottom-0">
           {!isPreview ? (
             <>
               <button
                 onClick={onClose}
-                className="px-4 py-1.5 text-xs font-bold text-gray-500 hover:bg-gray-50 rounded-lg transition-all border-none bg-transparent cursor-pointer"
+                className="px-4 py-1.5 text-xs font-bold text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-all border-none bg-transparent cursor-pointer"
               >
                 Cancel
               </button>
@@ -407,7 +407,7 @@ const ORSUpdateModal: React.FC<ORSUpdateModalProps> = ({
             <>
               <button
                 onClick={() => setIsPreview(false)}
-                className="px-4 py-1.5 text-xs font-bold text-gray-500 hover:bg-gray-50 rounded-lg transition-all border-none bg-transparent cursor-pointer"
+                className="px-4 py-1.5 text-xs font-bold text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-all border-none bg-transparent cursor-pointer"
               >
                 Back to Edit
               </button>

@@ -195,128 +195,130 @@ const ORSList = () => {
       />
 
       <div className="bg-white dark:bg-[#1c2632] rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
-        <table className="w-full text-left">
-          <thead className="bg-gray-50 dark:bg-[#101822] border-b border-gray-100 dark:border-gray-800">
-            <tr>
-              <th className="px-6 py-4 text-xs font-bold uppercase text-gray-500 dark:text-gray-400">
-                Vehicle
-              </th>
-              <th className="px-6 py-4 text-xs font-bold uppercase text-gray-500 dark:text-gray-400">
-                Score
-              </th>
-              <th className="px-6 py-4 text-xs font-bold uppercase text-gray-500 dark:text-gray-400">
-                Traffic Grade
-              </th>
-              <th className="px-6 py-4 text-xs font-bold uppercase text-gray-500 dark:text-gray-400 text-right">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
-            {isLoading ? (
-              <TableRowSkeleton
-                rows={8}
-                renderRows={() => (
-                  <>
-                    <td className="px-6 py-4">
-                      <Skeleton className="h-4 w-32" />
-                    </td>
-                    <td className="px-6 py-4">
-                      <Skeleton className="h-4 w-12" />
-                    </td>
-                    <td className="px-6 py-4">
-                      <Skeleton className="h-6 w-20 rounded-full" />
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex justify-end gap-2">
-                        <Skeleton className="size-9 rounded-lg" />
-                        <Skeleton className="size-9 rounded-lg" />
-                      </div>
-                    </td>
-                  </>
-                )}
-              />
-            ) : isError ? (
+        <div className="overflow-x-auto">
+          <table className="w-full text-left min-w-160">
+            <thead className="bg-gray-50 dark:bg-[#101822] border-b border-gray-100 dark:border-gray-800">
               <tr>
-                <td colSpan={4} className="px-6 py-10 text-center">
-                  <div className="flex flex-col items-center gap-2 text-red-500">
-                    <AlertCircle size={32} />
-                    <p className="text-sm font-medium">
-                      Failed to load ORS plans.
-                    </p>
-                  </div>
-                </td>
+                <th className="px-6 py-4 text-xs font-bold uppercase text-gray-500 dark:text-gray-400">
+                  Vehicle
+                </th>
+                <th className="px-6 py-4 text-xs font-bold uppercase text-gray-500 dark:text-gray-400">
+                  Score
+                </th>
+                <th className="px-6 py-4 text-xs font-bold uppercase text-gray-500 dark:text-gray-400">
+                  Traffic Grade
+                </th>
+                <th className="px-6 py-4 text-xs font-bold uppercase text-gray-500 dark:text-gray-400 text-right">
+                  Actions
+                </th>
               </tr>
-            ) : filteredPlans.length > 0 ? (
-              filteredPlans.map((item: TORSPlan) => (
-                <tr
-                  key={item._id}
-                  className="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors"
-                >
-                  <td className="px-6 py-4 font-medium dark:text-gray-200">
-                    {item.vehicle}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`font-bold ${
-                        parseInt(item.roadWorthinessScore) >= 80
-                          ? 'text-green-500'
-                          : parseInt(item.roadWorthinessScore) >= 60
-                            ? 'text-orange-500'
-                            : 'text-red-500'
-                      }`}
-                    >
-                      {item.roadWorthinessScore}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`px-2 py-1 text-xs font-bold rounded-full ${
-                        ['A', 'B', 'Good'].includes(item.overallTrafficScore)
-                          ? 'bg-green-100 text-green-600'
-                          : 'bg-red-100 text-red-600'
-                      }`}
-                    >
-                      {item.overallTrafficScore}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex justify-end gap-2">
-                      {canModify && (
-                        <>
-                          <button
-                            onClick={() => setSelectedPlan(item)}
-                            className="p-2 text-gray-500 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
-                            title="Edit"
-                          >
-                            <Pencil size={18} />
-                          </button>
-                          {user?.role === 'admin' && (
-                            <button
-                              onClick={() => handleOrsDelete(item._id)}
-                              className="p-2 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
-                              title="Delete"
-                            >
-                              <Trash2 size={18} />
-                            </button>
-                          )}
-                        </>
-                      )}
+            </thead>
+            <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+              {isLoading ? (
+                <TableRowSkeleton
+                  rows={8}
+                  renderRows={() => (
+                    <>
+                      <td className="px-6 py-4">
+                        <Skeleton className="h-4 w-32" />
+                      </td>
+                      <td className="px-6 py-4">
+                        <Skeleton className="h-4 w-12" />
+                      </td>
+                      <td className="px-6 py-4">
+                        <Skeleton className="h-6 w-20 rounded-full" />
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <div className="flex justify-end gap-2">
+                          <Skeleton className="size-9 rounded-lg" />
+                          <Skeleton className="size-9 rounded-lg" />
+                        </div>
+                      </td>
+                    </>
+                  )}
+                />
+              ) : isError ? (
+                <tr>
+                  <td colSpan={4} className="px-6 py-10 text-center">
+                    <div className="flex flex-col items-center gap-2 text-red-500">
+                      <AlertCircle size={32} />
+                      <p className="text-sm font-medium">
+                        Failed to load ORS plans.
+                      </p>
                     </div>
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={4} className="px-6 py-10 text-center">
-                  <p className="text-gray-500 text-sm font-medium">
-                    No ORS plans found.
-                  </p>
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              ) : filteredPlans.length > 0 ? (
+                filteredPlans.map((item: TORSPlan) => (
+                  <tr
+                    key={item._id}
+                    className="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors"
+                  >
+                    <td className="px-6 py-4 font-medium dark:text-gray-200">
+                      {item.vehicle}
+                    </td>
+                    <td className="px-6 py-4">
+                      <span
+                        className={`font-bold ${
+                          parseInt(item.roadWorthinessScore) >= 80
+                            ? 'text-green-500'
+                            : parseInt(item.roadWorthinessScore) >= 60
+                              ? 'text-orange-500'
+                              : 'text-red-500'
+                        }`}
+                      >
+                        {item.roadWorthinessScore}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span
+                        className={`px-2 py-1 text-xs font-bold rounded-full ${
+                          ['A', 'B', 'Good'].includes(item.overallTrafficScore)
+                            ? 'bg-green-100 text-green-600'
+                            : 'bg-red-100 text-red-600'
+                        }`}
+                      >
+                        {item.overallTrafficScore}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex justify-end gap-2">
+                        {canModify && (
+                          <>
+                            <button
+                              onClick={() => setSelectedPlan(item)}
+                              className="p-2 text-gray-500 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors cursor-pointer"
+                              title="Edit"
+                            >
+                              <Pencil size={18} />
+                            </button>
+                            {user?.role === 'admin' && (
+                              <button
+                                onClick={() => handleOrsDelete(item._id)}
+                                className="p-2 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors cursor-pointer"
+                                title="Delete"
+                              >
+                                <Trash2 size={18} />
+                              </button>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={4} className="px-6 py-10 text-center">
+                    <p className="text-gray-500 text-sm font-medium">
+                      No ORS plans found.
+                    </p>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
