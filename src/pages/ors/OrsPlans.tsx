@@ -35,15 +35,23 @@ const ORSList = () => {
   // If the current user is an inspector, only show plans assigned to them
   // or created by them. Admins and viewers see all (admins can modify).
   const extractUserId = (ref?: string | { _id?: string } | null) =>
-    typeof ref === 'string' ? ref : ref && typeof ref === 'object' ? ref._id : undefined;
+    typeof ref === 'string'
+      ? ref
+      : ref && typeof ref === 'object'
+        ? ref._id
+        : undefined;
 
-  const visiblePlans = user?.role === 'inspector'
-    ? plans.filter((plan: TORSPlan) => {
-        const assignedId = extractUserId(plan.assignedTo);
-        const createdId = extractUserId(plan.createdBy);
-        return String(assignedId) === String(user?._id) || String(createdId) === String(user?._id);
-      })
-    : plans;
+  const visiblePlans =
+    user?.role === 'inspector'
+      ? plans.filter((plan: TORSPlan) => {
+          const assignedId = extractUserId(plan.assignedTo);
+          const createdId = extractUserId(plan.createdBy);
+          return (
+            String(assignedId) === String(user?._id) ||
+            String(createdId) === String(user?._id)
+          );
+        })
+      : plans;
 
   const filteredPlans = visiblePlans.filter((plan: TORSPlan) => {
     const matchesSearch = plan.vehicle
@@ -97,8 +105,8 @@ const ORSList = () => {
 
   return (
     <div className="p-6 max-w-7xl mx-auto w-full space-y-6">
-      <div className="flex justify-between items-center">
-        <div className="flex flex-col">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center md:flex-nowrap gap-4">
+        <div className="flex flex-col flex-1 min-w-0">
           <h1 className="text-[#111418] dark:text-white text-3xl font-black tracking-tight">
             Ors Plans Management
           </h1>
@@ -107,12 +115,14 @@ const ORSList = () => {
           </p>
         </div>
         {canModify && (
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg font-bold transition-all shadow-md active:scale-95 cursor-pointer"
-          >
-            + New ORS Plan
-          </button>
+          <div className="w-full md:w-auto md:shrink-0">
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="w-full md:w-auto bg-primary hover:bg-primary/90 text-white px-4 py-3 md:py-2 rounded-lg font-bold transition-all shadow-md active:scale-95 cursor-pointer"
+            >
+              + New ORS Plan
+            </button>
+          </div>
         )}
       </div>
 
