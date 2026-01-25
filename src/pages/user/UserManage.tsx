@@ -4,7 +4,7 @@ import {
   ChevronDown,
   Pencil,
   Trash2,
-  Loader2,
+  UserPlus,
 } from 'lucide-react';
 import {
   useAllUserQuery,
@@ -15,6 +15,9 @@ import type { TUser } from '../../types/user';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import UserEditModal from '../../components/UserEditModal';
+import UserCreateModal from '../../components/UserCreateModal';
+import TableRowSkeleton from '../../components/skeletons/TableRowSkeleton';
+import Skeleton from '../../components/skeletons/Skeleton';
 
 const UserManage = () => {
   const { data, isLoading, isError } = useAllUserQuery(undefined);
@@ -23,6 +26,9 @@ const UserManage = () => {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('all');
+
+  // Create Modal State
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   // Edit Modal State
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -62,7 +68,10 @@ const UserManage = () => {
         >
           Yes
         </button>
-        <button onClick={() => toast.dismiss(t.id)} className="text-gray-500 cursor-pointer">
+        <button
+          onClick={() => toast.dismiss(t.id)}
+          className="text-gray-500 cursor-pointer"
+        >
           Cancel
         </button>
       </div>
@@ -108,6 +117,13 @@ const UserManage = () => {
               the ORS platform.
             </p>
           </div>
+          <button
+            onClick={() => setIsCreateModalOpen(true)}
+            className="flex items-center gap-2 px-6 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-lg text-sm font-bold shadow-lg shadow-primary/20 transition-all transform active:scale-95 border-none cursor-pointer"
+          >
+            <UserPlus size={18} />
+            <span>Add New User</span>
+          </button>
         </div>
         <div className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex flex-col md:flex-row gap-4">
@@ -165,14 +181,28 @@ const UserManage = () => {
               </thead>
               <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                 {isLoading ? (
-                  <tr>
-                    <td colSpan={3} className="px-6 py-10 text-center">
-                      <div className="flex flex-col items-center gap-2 text-gray-500">
-                        <Loader2 className="animate-spin" size={32} />
-                        <p className="text-sm font-medium">Loading users...</p>
-                      </div>
-                    </td>
-                  </tr>
+                  <TableRowSkeleton
+                    rows={users.length || 5}
+                    renderRows={() => (
+                      <>
+                        <td className="px-6 py-4">
+                          <div className="space-y-2">
+                            <Skeleton className="h-4 w-32" />
+                            <Skeleton className="h-3 w-48" />
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <Skeleton className="h-5 w-20 rounded-full" />
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <div className="flex justify-end gap-2">
+                            <Skeleton className="size-8 rounded-lg" />
+                            <Skeleton className="size-8 rounded-lg" />
+                          </div>
+                        </td>
+                      </>
+                    )}
+                  />
                 ) : isError ? (
                   <tr>
                     <td colSpan={3} className="px-6 py-10 text-center">
@@ -244,6 +274,11 @@ const UserManage = () => {
         setFormData={setFormData}
         onSubmit={handleUpdate}
         isUpdating={isUpdating}
+      />
+
+      <UserCreateModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
       />
     </main>
   );

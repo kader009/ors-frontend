@@ -1,16 +1,22 @@
-import {
-  Calendar,
-  TrendingUp,
-  AlertTriangle,
-  Users,
-  Loader2,
-} from 'lucide-react';
-import { useAllOrsPlanQuery } from '../../redux/api/endApi';
+import { Calendar, TrendingUp, AlertTriangle, Users } from 'lucide-react';
+import { useAllOrsPlanQuery, useAllUserQuery } from '../../redux/api/endApi';
 import type { TORSPlan } from '../../types/ors';
+import type { TUser } from '../../types/user';
+import DashboardSkeleton from '../../components/skeletons/DashboardSkeleton';
 
 const Dashboard = () => {
-  const { data, isLoading, isError } = useAllOrsPlanQuery(undefined);
-  const plans: TORSPlan[] = data?.data || [];
+  const {
+    data: orsData,
+    isLoading: isOrsLoading,
+    isError: isOrsError,
+  } = useAllOrsPlanQuery(undefined);
+  const { data: userData, isLoading: isUserLoading } =
+    useAllUserQuery(undefined);
+
+  const plans: TORSPlan[] = orsData?.data || [];
+  const users: TUser[] = userData?.users || [];
+
+  const inspectors = users.filter((user) => user.role === 'inspector');
 
   // Descriptive dynamic helpers
   const parseScore = (value: string | number | undefined): number =>
@@ -45,18 +51,23 @@ const Dashboard = () => {
   const thirtyDaysAgo = new Date(new Date().setDate(today.getDate() - 30));
   const dateRangeLabel = `${formatShortDate(thirtyDaysAgo.toISOString())} - ${formatShortDate(today.toISOString())}`;
 
-  if (isLoading)
-    return (
-      <div className="flex h-[80vh] items-center justify-center">
-        <Loader2 className="animate-spin text-primary" size={42} />
-      </div>
-    );
-  if (isError)
+  if (isOrsLoading || isUserLoading) return <DashboardSkeleton />;
+
+  if (isOrsError)
     return (
       <div className="p-8 text-red-500 font-bold text-center">
         Connection Error.
       </div>
     );
+
+  const avatarColors = [
+    'bg-blue-500',
+    'bg-purple-500',
+    'bg-emerald-500',
+    'bg-amber-500',
+    'bg-pink-500',
+    'bg-indigo-500',
+  ];
 
   return (
     <div className="p-6 max-w-7xl mx-auto w-full space-y-6">
@@ -115,7 +126,7 @@ const Dashboard = () => {
           </p>
         </div>
 
-        {/* Inspector Activity (Static/Sample UI) */}
+        {/* Inspector Activity (Dynamic UI) */}
         <div className="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-gray-800 border border-[#dbe0e6] dark:border-gray-700 shadow-sm sm:col-span-2 lg:col-span-1">
           <div className="flex justify-between items-start">
             <p className="text-[#617289] dark:text-gray-400 text-sm font-medium">
@@ -125,23 +136,29 @@ const Dashboard = () => {
           </div>
           <div className="flex items-baseline gap-2 mt-2">
             <p className="text-[#111418] dark:text-white tracking-tight text-4xl font-extrabold leading-tight">
-              Active
+              {inspectors.length > 0 ? inspectors.length : '0'} Active
             </p>
           </div>
           <div className="flex -space-x-2 mt-2">
-            {[1, 2, 3].map((profileId) => (
+            {inspectors.slice(0, 4).map((inspector, index) => (
               <div
-                key={profileId}
-                className="size-6 rounded-full border-2 border-white dark:border-gray-800 bg-gray-100"
-                style={{
-                  backgroundImage: `url(https://i.pravatar.cc/100?u=${profileId})`,
-                  backgroundSize: 'cover',
-                }}
-              />
+                key={inspector._id}
+                title={inspector.username}
+                className={`size-7 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center text-[10px] font-bold text-white shadow-sm transition-transform hover:scale-110 cursor-default ${avatarColors[index % avatarColors.length]}`}
+              >
+                {inspector.username.substring(0, 2).toUpperCase()}
+              </div>
             ))}
-            <div className="size-6 rounded-full border-2 border-white dark:border-gray-800 bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-[10px] font-bold dark:text-white">
-              +5
-            </div>
+            {inspectors.length > 4 && (
+              <div className="size-7 rounded-full border-2 border-white dark:border-gray-800 bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-[10px] font-bold dark:text-white outline-none">
+                +{inspectors.length - 4}
+              </div>
+            )}
+            {inspectors.length === 0 && (
+              <p className="text-[10px] text-gray-400 italic">
+                No inspectors onboarded yet.
+              </p>
+            )}
           </div>
         </div>
       </div>
@@ -217,9 +234,16 @@ const Dashboard = () => {
                     {inspectionRow.vehicle}
                   </td>
                   <td
-                    className={`px-6 py-4 text-center font-black ${parseScore(inspectionRow.roadWorthinessScore) > 80 ? 'text-[#07883b]' : 'text-orange-500'}`}
+                    className={`px-6 py-4 text-center font-black ${
+                      parseScore(inspectionRow.roadWorthinessScore) >= 80
+                        ? 'text-[#07883b]'
+                        : parseScore(inspectionRow.roadWorthinessScore) >= 60
+                          ? 'text-orange-500'
+                          : 'text-red-500'
+                    }`}
                   >
-                    {inspectionRow.roadWorthinessScore}%
+                    {String(inspectionRow.roadWorthinessScore).replace('%', '')}
+                    %
                   </td>
                   <td className="px-6 py-4 text-right">
                     <span
@@ -246,11 +270,6 @@ const Dashboard = () => {
               ))}
             </tbody>
           </table>
-        </div>
-        <div className="p-4 flex justify-center border-t border-[#f0f2f4] dark:border-gray-700">
-          <button className="text-primary text-sm font-bold hover:underline cursor-pointer border-none bg-transparent">
-            View All Logs
-          </button>
         </div>
       </div>
     </div>

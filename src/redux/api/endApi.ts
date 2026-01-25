@@ -29,6 +29,16 @@ const ORSApi = baseApi.injectEndpoints({
       providesTags: ['User'],
     }),
 
+    // create user only admin
+    createUser: build.mutation({
+      query: (userInfo) => ({
+        url: '/user',
+        method: 'POST',
+        body: userInfo,
+      }),
+      invalidatesTags: ['User'],
+    }),
+
     // user delete for admin
     userDelete: build.mutation({
       query: (userId) => ({
@@ -98,4 +108,5 @@ export const {
   useOrsDeleteMutation,
   useOrsUpdateMutation,
   useCreateOrsPlanMutation,
+  useCreateUserMutation,
 } = ORSApi;
