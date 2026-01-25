@@ -48,7 +48,7 @@ const UserEditModal = ({
             <input
               type="text"
               required
-              className="w-full h-11 px-4 bg-gray-50 dark:bg-[#101822] border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 outline-none"
+              className="w-full h-11 px-4 bg-gray-50 dark:bg-[#101822] border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 outline-none dark:text-white dark:placeholder-gray-400"
               value={formData.username}
               onChange={(e) =>
                 setFormData({ ...formData, username: e.target.value })
@@ -63,7 +63,7 @@ const UserEditModal = ({
             <input
               type="email"
               required
-              className="w-full h-11 px-4 bg-gray-50 dark:bg-[#101822] border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 outline-none"
+              className="w-full h-11 px-4 bg-gray-50 dark:bg-[#101822] border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 outline-none dark:text-white dark:placeholder-gray-400"
               value={formData.email}
               onChange={(e) =>
                 setFormData({ ...formData, email: e.target.value })
@@ -77,7 +77,7 @@ const UserEditModal = ({
             </label>
             <div className="relative">
               <select
-                className="w-full h-11 px-4 bg-gray-50 dark:bg-[#101822] border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 outline-none appearance-none cursor-pointer"
+                className="w-full h-11 px-4 bg-gray-50 dark:bg-[#101822] border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 outline-none appearance-none cursor-pointer dark:text-white"
                 value={formData.role}
                 onChange={(e) =>
                   setFormData({ ...formData, role: e.target.value })

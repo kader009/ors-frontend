@@ -133,7 +133,7 @@ const UserManage = () => {
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
               />
               <input
-                className="w-full h-11 pl-10 pr-4 bg-background-light dark:bg-gray-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none"
+                className="w-full h-11 pl-10 pr-4 bg-background-light dark:bg-gray-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none dark:text-white dark:placeholder-gray-400"
                 placeholder="Search by name, email"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
