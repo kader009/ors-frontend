@@ -1,5 +1,6 @@
 import { Calendar, TrendingUp, AlertTriangle, Users } from 'lucide-react';
 import { useAllOrsPlanQuery, useAllUserQuery } from '../../redux/api/endApi';
+import { useAppSelector } from '../../redux/hook';
 import type { TORSPlan } from '../../types/ors';
 import type { TUser } from '../../types/user';
 import DashboardSkeleton from '../../components/skeletons/DashboardSkeleton';
@@ -14,6 +15,27 @@ const Dashboard = () => {
     useAllUserQuery(undefined);
 
   const plans: TORSPlan[] = orsData?.data || [];
+  const { user } = useAppSelector((s) => s.user);
+
+  const extractUserId = (ref?: string | { _id?: string } | null) =>
+    typeof ref === 'string'
+      ? ref
+      : ref && typeof ref === 'object'
+        ? ref._id
+        : undefined;
+
+  // If inspector, only show plans assigned to them or created by them
+  const visiblePlans =
+    user?.role === 'inspector'
+      ? plans.filter((plan) => {
+          const assignedId = extractUserId(plan.assignedTo);
+          const createdId = extractUserId(plan.createdBy);
+          return (
+            String(assignedId) === String(user?._id) ||
+            String(createdId) === String(user?._id)
+          );
+        })
+      : plans;
   const users: TUser[] = userData?.users || [];
 
   const inspectors = users.filter((user) => user.role === 'inspector');
@@ -30,21 +52,21 @@ const Dashboard = () => {
         }).format(new Date(dateString))
       : 'Jan';
 
-  const averageScore = plans.length
+  const averageScore = visiblePlans.length
     ? Math.round(
-        plans.reduce(
+        visiblePlans.reduce(
           (accumulator, plan) =>
             accumulator + parseScore(plan.roadWorthinessScore),
           0,
-        ) / plans.length,
+        ) / visiblePlans.length,
       )
     : 0;
 
-  const actionRequiredCount = plans.filter(
+  const actionRequiredCount = visiblePlans.filter(
     (plan) => parseScore(plan.roadWorthinessScore) < 60,
   ).length;
-  const recentInspections = [...plans].slice(-5).reverse();
-  const summaryChartPlans = plans.slice(-12);
+  const recentInspections = [...visiblePlans].slice(-5).reverse();
+  const summaryChartPlans = visiblePlans.slice(-12);
 
   // Dynamic header date (Last 30 Days)
   const today = new Date();
@@ -105,7 +127,7 @@ const Dashboard = () => {
             </p>
           </div>
           <p className="text-[#617289] dark:text-gray-400 text-[12px] mt-2">
-            Based on {plans.length} active records.
+            Based on {visiblePlans.length} active records.
           </p>
         </div>
 
