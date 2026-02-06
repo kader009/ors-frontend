@@ -218,7 +218,7 @@ const Dashboard = () => {
               }}
             >
               <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-800 dark:bg-gray-700 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity z-10 shadow-xl whitespace-nowrap">
-                {chartPlan.vehicle}: {chartPlan.roadWorthinessScore}% <br />{' '}
+                {chartPlan.vehicle}: {chartPlan.roadWorthinessScore} <br />{' '}
                 {formatShortDate(chartPlan.createdAt)}
               </div>
             </div>
