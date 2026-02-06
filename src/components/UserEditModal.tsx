@@ -1,17 +1,5 @@
 import { X, ChevronDown, Loader2 } from 'lucide-react';
-import type { TUser } from '../types/user';
-import type { Dispatch, SetStateAction, FormEvent } from 'react';
-
-type UserFormData = Omit<TUser, '_id'>;
-
-interface UserEditModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  formData: UserFormData;
-  setFormData: Dispatch<SetStateAction<UserFormData>>;
-  onSubmit: (e: FormEvent<HTMLFormElement>) => void;
-  isUpdating: boolean;
-}
+import type { UserEditModalProps } from '../types/userEditProps';
 
 const UserEditModal = ({
   isOpen,
