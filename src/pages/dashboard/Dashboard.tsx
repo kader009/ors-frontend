@@ -261,7 +261,7 @@ const Dashboard = () => {
                   </td>
                 </tr>
               ) : (
-                recentInspections.map((inspectionRow) => (
+                recentInspections.slice(0, 4).map((inspectionRow) => (
                   <tr
                     key={inspectionRow._id}
                     className="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors text-sm dark:text-gray-300"
