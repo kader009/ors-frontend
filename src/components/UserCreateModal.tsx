@@ -34,8 +34,8 @@ const UserCreateModal: React.FC<UserCreateModalProps> = ({
         role: 'viewer',
       });
       onClose();
-    } catch (err: any) {
-      toast.error(err?.data?.message || 'Failed to create user');
+    } catch (err: unknown) {
+      toast.error((err as { data?: { message?: string } })?.data?.message || 'Failed to create user');
     }
   };
 
