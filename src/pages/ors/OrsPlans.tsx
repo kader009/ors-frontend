@@ -120,7 +120,7 @@ const ORSList = () => {
               onClick={() => setIsModalOpen(true)}
               className="w-full md:w-auto bg-primary hover:bg-primary/90 text-white px-4 py-3 md:py-2 rounded-lg font-bold transition-all shadow-md active:scale-95 cursor-pointer"
             >
-              + New ORS Plan
+              Create ORS Plan
             </button>
           </div>
         )}
