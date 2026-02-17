@@ -174,7 +174,7 @@ const UserCreateModal: React.FC<UserCreateModalProps> = ({
             </button>
             <button
               disabled={isLoading}
-              className="px-6 py-1.5 bg-primary hover:bg-primary-dark text-white rounded-lg text-xs font-bold shadow-lg shadow-primary/20 flex items-center gap-2 transform active:scale-95 transition-all disabled:opacity-50 cursor-pointer border-none"
+              className="px-6 py-1.5 bg-primary hover:bg-primary-dark text-white rounded-lg text-xs font-bold flex items-center gap-2 transform active:scale-95 transition-all disabled:opacity-50 cursor-pointer border-none"
             >
               {isLoading ? 'Creating...' : 'Create User'}
             </button>
