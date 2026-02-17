@@ -242,13 +242,13 @@ const UserManage = () => {
                         <div className="flex justify-end gap-2">
                           <button
                             onClick={() => handleEditClick(user)}
-                            className="p-2 text-gray-500 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
+                            className="p-2 text-gray-500 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors cursor-pointer"
                           >
                             <Pencil size={18} />
                           </button>
                           <button
                             onClick={() => handleDelete(user._id)}
-                            className="p-2 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            className="p-2 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
                           >
                             <Trash2 size={18} />
                           </button>
