@@ -123,7 +123,7 @@ const UserManage = () => {
           </div>
           <button
             onClick={() => setIsCreateModalOpen(true)}
-            className="flex items-center gap-2 px-6 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-lg text-sm font-bold shadow-lg shadow-primary/20 transition-all transform active:scale-95 border-none cursor-pointer"
+            className="flex items-center gap-2 px-6 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-lg text-sm font-bold transition-all transform active:scale-95 border-none cursor-pointer"
           >
             <UserPlus size={18} />
             <span>Add New User</span>
