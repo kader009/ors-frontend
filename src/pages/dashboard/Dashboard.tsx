@@ -11,6 +11,7 @@ const Dashboard = () => {
     data: orsData,
     isLoading: isOrsLoading,
     isError: isOrsError,
+    refetch: refetchOrs,
   } = useAllOrsPlanQuery(undefined);
   const { data: userData, isLoading: isUserLoading } = useAllUserQuery(
     undefined,
@@ -20,7 +21,7 @@ const Dashboard = () => {
   );
 
   const plans: TORSPlan[] = orsData?.data || [];
-  
+
   const extractUserId = (ref?: string | { _id?: string } | null) =>
     typeof ref === 'string'
       ? ref
@@ -81,8 +82,25 @@ const Dashboard = () => {
 
   if (isOrsError)
     return (
-      <div className="p-8 text-red-500 font-bold text-center">
-        Connection Error.
+      <div className="flex flex-col items-center justify-center h-[60vh] gap-4 text-center p-8">
+        <div className="text-5xl">🔌</div>
+        <h2 className="text-xl font-black text-red-500">
+          Server is waking up...
+        </h2>
+        <p className="text-sm text-[#617289] dark:text-gray-400 max-w-sm">
+          The backend server was idle and is restarting. This usually takes
+          <span className="font-bold text-gray-700 dark:text-gray-300">
+            {' '}
+            30–60 seconds
+          </span>
+          . Please wait a moment and try again.
+        </p>
+        <button
+          onClick={() => refetchOrs()}
+          className="mt-2 px-6 py-2.5 bg-primary text-white rounded-lg text-sm font-bold hover:bg-blue-700 transition-all shadow-lg shadow-primary/20 cursor-pointer"
+        >
+          Retry Connection
+        </button>
       </div>
     );
 
